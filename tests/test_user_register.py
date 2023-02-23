@@ -1,11 +1,17 @@
 import requests
-from Lesson_4.lib.base_case import BaseCase
-from Lesson_4.lib.assertions import Assertions
+from lib.base_case import BaseCase
+from lib.assertions import Assertions
 from datetime import datetime
-from Lesson_4.lib.my_requests import MyRequests
+from lib.my_requests import MyRequests
 import pytest
 
 class TestUserRegister(BaseCase):
+    fields = [
+        ('password'),
+        ('username'),
+        ('firstName'),
+        ('lastName'),
+        ('email')]
 
     def test_user_create_successfully(self):
         data = self.prepare_registration_data()
@@ -31,52 +37,16 @@ class TestUserRegister(BaseCase):
         response = MyRequests.post("/user", data=data)
 
         Assertions.assert_code_status(response, 400)
-        assert response.content.decode("utf-8") == f"Invalid email format", f"Unexpected response content {response.content}"
+        Assertions.assert_content(response, "Invalid email format")
 
-    datas = [
-        ({
-            # 'password': '123',
-            'username': 'learnqa',
-            'firstName': 'learnqa',
-            'lastName': 'learnqa',
-            'email': 'vinkotov@example.com'
-        }, 'password'),
-        ({
-            'password': '123',
-            # 'username': 'learnqa',
-            'firstName': 'learnqa',
-            'lastName': 'learnqa',
-            'email': 'vinkotov@example.com'
-        }, 'username'),
-        ({
-            'password': '123',
-            'username': 'learnqa',
-            # 'firstName': 'learnqa',
-            'lastName': 'learnqa',
-            'email': 'vinkotov@example.com'
-        }, 'firstName'),
-        ({
-            'password': '123',
-            'username': 'learnqa',
-            'firstName': 'learnqa',
-            # 'lastName': 'learnqa',
-            'email': 'vinkotov@example.com'
-        }, 'lastName'),
-        ({
-            'password': '123',
-            'username': 'learnqa',
-            'firstName': 'learnqa',
-            'lastName': 'learnqa',
-            # 'email': 'vinkotov@example.com'
-        }, 'email')
-    ]
-    @pytest.mark.parametrize('data', datas)
-    def test_create_user_without_some_field(self, data):
-        response = MyRequests.post("/user", data=data[0])
+    @pytest.mark.parametrize('field', fields)
+    def test_create_user_without_some_field(self, field):
+        data = self.prepare_registration_data()
+        del data[field]
+        response = MyRequests.post("/user", data)
 
         Assertions.assert_code_status(response, 400)
-        assert response.content.decode("utf-8") == f"The following required params are missed: {data[1]}", f"Unexpected response content {response.content}"
-
+        Assertions.assert_content(response, f"The following required params are missed: {field}")
 
     def test_create_user_with_too_short_name(self):
         data = self.prepare_registration_data()
@@ -85,7 +55,7 @@ class TestUserRegister(BaseCase):
         response = MyRequests.post("/user", data=data)
 
         Assertions.assert_code_status(response, 400)
-        assert response.content.decode("utf-8") == f"The value of 'username' field is too short", f"Unexpected response content {response.content}"
+        Assertions.assert_content(response, "The value of 'username' field is too short")
 
     def test_create_user_with_too_long_name(self):
         data = self.prepare_registration_data()
@@ -94,4 +64,4 @@ class TestUserRegister(BaseCase):
         response = MyRequests.post("/user", data=data)
 
         Assertions.assert_code_status(response, 400)
-        assert response.content.decode("utf-8") == f"The value of 'username' field is too long", f"Unexpected response content {response.content}"
+        Assertions.assert_content(response, "The value of 'username' field is too long")

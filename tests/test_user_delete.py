@@ -1,13 +1,19 @@
 import requests
 import pytest
-from Lesson_4.lib.base_case import BaseCase
-from Lesson_4.lib.assertions import Assertions
-from Lesson_4.lib.my_requests import MyRequests
+from lib.base_case import BaseCase
+from lib.assertions import Assertions
+from lib.my_requests import MyRequests
 import allure
+
+
+# Для запуска теста из командной строки:
+# python -m pytest -s tests/test_user_auth.py
+
 
 class TestUserDelete(BaseCase):
 
     def test_delete_negative_user_2(self):
+        # LOGIN
         data = {
             'email': 'vinkotov@example.com',
             'password': '1234'
@@ -19,6 +25,7 @@ class TestUserDelete(BaseCase):
         token = self.get_header(response, "x-csrf-token")
         user_id_2 = self.get_json_value(response, "user_id")
 
+        # DELETE
         response = MyRequests.delete(
             f"/user/{user_id_2}",
             headers={"x-csrf-token": token},
@@ -26,7 +33,7 @@ class TestUserDelete(BaseCase):
         )
 
         Assertions.assert_code_status(response, 400)
-        assert response.content.decode("utf-8") == f"Please, do not delete test users with ID 1, 2, 3, 4 or 5.", f"Unexpected response content {response.content}"
+        Assertions.assert_content(response, "Please, do not delete test users with ID 1, 2, 3, 4 or 5.")
 
     def test_delete_just_created_user(self):
         # REGISTER
@@ -108,13 +115,13 @@ class TestUserDelete(BaseCase):
             'email': email2,
             'password': password2
         }
+
         response = MyRequests.post("/user/login", data=login_data)
 
         auth_sid2 = self.get_cookie(response, "auth_sid")
         token2 = self.get_header(response, "x-csrf-token")
 
         # DELETE USER2 UNDER USER1
-
         response = MyRequests.delete(
             f"/user/{user_id2}",
             headers={"x-csrf-token": token1},

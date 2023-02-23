@@ -1,7 +1,7 @@
 import requests
-from Lesson_4.lib.logger import Logger
+from lib.logger import Logger
 import allure
-from Lesson_4.environment import ENV_OBJECT
+from environment import ENV_OBJECT
 
 class MyRequests():
     @staticmethod

@@ -3,7 +3,7 @@ import os
 from requests import Response
 
 class Logger:
-    file_name = f"Lesson_4/logs/log_" + str(datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")) + ".logs"
+    file_name = f"logs/log_" + str(datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")) + ".logs"
 
     @classmethod
     def _write_log_to_file(cls, data: str):

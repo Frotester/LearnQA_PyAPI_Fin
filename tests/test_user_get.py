@@ -72,6 +72,7 @@ class TestUserGet(BaseCase):
         # REGISTER USER2
         with allure.step("It registers the user2"):
             register_data = self.prepare_registration_data()
+
             response = MyRequests.post("/user", data=register_data)
 
             Assertions.assert_code_status(response, 200)

@@ -74,6 +74,7 @@ class TestUserEdit(BaseCase):
         # REGISTER
         with allure.step("It registers the user"):
             register_data = self.prepare_registration_data()
+
             response = MyRequests.post("/user", data=register_data)
 
             Assertions.assert_code_status(response, 200)
@@ -109,7 +110,7 @@ class TestUserEdit(BaseCase):
             user_id1 = self.get_json_value(response, "id")
 
         # REGISTER USER2
-        with allure.step("It registers the user1"):
+        with allure.step("It registers the user2"):
             register_data = self.prepare_registration_data()
             register_data['email'] = register_data['email'].replace("@", "_02@")
             register_data['firstName'] = register_data['firstName'] + '_02'
@@ -179,6 +180,7 @@ class TestUserEdit(BaseCase):
         # REGISTER
         with allure.step("It registers the user"):
             register_data = self.prepare_registration_data()
+
             response = MyRequests.post("/user", data=register_data)
 
             Assertions.assert_code_status(response, 200)
@@ -195,6 +197,7 @@ class TestUserEdit(BaseCase):
                 'email': email,
                 'password': password
             }
+
             response = MyRequests.post("/user/login", data=login_data)
 
             auth_sid = self.get_cookie(response, "auth_sid")
@@ -220,6 +223,7 @@ class TestUserEdit(BaseCase):
         # REGISTER
         with allure.step("It registers the user"):
             register_data = self.prepare_registration_data()
+
             response = MyRequests.post("/user", data=register_data)
 
             Assertions.assert_code_status(response, 200)
@@ -236,6 +240,7 @@ class TestUserEdit(BaseCase):
                 'email': email,
                 'password': password
             }
+            
             response = MyRequests.post("/user/login", data=login_data)
 
             auth_sid = self.get_cookie(response, "auth_sid")

@@ -1,8 +1,12 @@
 .idea/*
+.pytest_cache
 .pytest_cache/*
 __pycash__/
-tests1111/__pycache__/*
+tests/__pycache__/*
 lib/__pycache__/*
 logs/*
 test_results/*
 venv/
+tests/__pycache__/
+__pycache__/
+test_results/

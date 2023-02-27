@@ -11,8 +11,8 @@ import allure
 
 
 #  Для генерации allure-отчета
-#  python -m pytest --alluredir=test_results Lesson_4/tests/test_user_auth.py
-#  allure serve Lesson_4/test_results/
+#  python -m pytest --alluredir=test_results tests/test_user_auth.py
+#  allure serve test_results/
 
 
 @allure.epic("Authorization cases")
@@ -35,6 +35,9 @@ class TestUserAuth(BaseCase):
         self.user_id_from_auth_method = self.get_json_value(response, "user_id")
 
     @allure.description("This test successfully authorize user by email and password and get his info")
+    @allure.severity(allure.severity_level.CRITICAL)
+    @allure.link(name="Дока", url="https://playground.learnqa.ru/api/map")
+    @pytest.mark.skip()
     def test_auth_user(self):
         response = MyRequests.get(
             "/user/auth",
@@ -51,6 +54,7 @@ class TestUserAuth(BaseCase):
 
     @allure.description("This test checks authorization status w/o sending auth cookie or token")
     @pytest.mark.parametrize('condition', exclude_params)
+    @allure.severity(allure.severity_level.CRITICAL)
     def test_negative_auth_check(self, condition):
         if condition == "no_cookie":
             response = MyRequests.get(

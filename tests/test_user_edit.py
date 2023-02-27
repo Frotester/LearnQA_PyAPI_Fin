@@ -240,7 +240,7 @@ class TestUserEdit(BaseCase):
                 'email': email,
                 'password': password
             }
-            
+
             response = MyRequests.post("/user/login", data=login_data)
 
             auth_sid = self.get_cookie(response, "auth_sid")
